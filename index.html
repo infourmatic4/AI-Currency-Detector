@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI CURRENCY DETECTOR - KELOMPOK 4</title>
+    <title>AI ASEAN CURRENCY PRO - KELOMPOK 4</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -30,6 +30,7 @@
             min-height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px; margin: 0;
+            overflow-x: hidden;
         }
 
         .glass-card {
@@ -39,7 +40,7 @@
             border-radius: 28px;
             padding: 2rem; width: 100%; max-width: 500px; 
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glass-card.wide { max-width: 900px; }
@@ -53,11 +54,11 @@
         #media-container {
             width: 100%; border-radius: 20px; overflow: hidden; 
             border: 2px solid var(--primary-glow); position: relative; 
-            background: #000; aspect-ratio: 1/1; display: none;
-            display: flex; align-items: center; justify-content: center;
+            background: #000; aspect-ratio: 1/1; 
+            display: none; align-items: center; justify-content: center;
         }
 
-        canvas, #uploaded-img { width: 100% !important; height: 100% !important; object-fit: contain; }
+        canvas, img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
         .accuracy-bar-bg { width: 100%; background: rgba(255, 255, 255, 0.1); height: 10px; border-radius: 10px; margin: 15px 0; overflow: hidden; }
         #accuracy-bar-fill { height: 100%; width: 0%; background: var(--accent-color); transition: width 0.3s ease; }
@@ -81,64 +82,27 @@
         }
         .btn-back-panel:hover { background: #ef4444; color: white; }
 
-.btn-main, .btn-outline-custom, .btn-back-panel {
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-}
-
-.btn-main:hover, .btn-outline-custom:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); 
-}
-
-.btn-main:active, .btn-outline-custom:active {
-    transform: scale(0.95); 
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.glass-card {
-    animation: fadeInUp 0.8s ease-out;
-}
-
-select.form-select, input.form-control {
-    transition: all 0.3s ease;
-}
-
-select.form-select:focus, input.form-control:focus {
-    border-color: var(--primary-glow) !important;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
-    background-color: rgba(20, 18, 50, 1) !important;
-}
-
-.money-rain-container {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    overflow: hidden; z-index: -1; pointer-events: none;
-}
-.money-item {
-    position: absolute; font-size: 2rem; opacity: 0;
-    animation: fadeAndFall linear infinite;
-}
-@keyframes fadeAndFall {
-    0% { opacity: 0; transform: translateY(-10vh) rotate(0deg); }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.8; }
-    100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
-}
+        .money-rain-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: -1; pointer-events: none;
+        }
+        .money-item {
+            position: absolute; font-size: 2rem; opacity: 0;
+            animation: fadeAndFall linear infinite;
+        }
+        @keyframes fadeAndFall {
+            0% { opacity: 0; transform: translateY(-10vh) rotate(0deg); }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
+        }
     </style>
 </head>
 <body>
-<div class="money-rain-container"></div>
+    <div class="money-rain-container"></div>
+    
     <div class="glass-card" id="mainCard">
-        <h2 class="header-title">AI CURRENCY DETECTOR</h2>
+        <h2 class="header-title">ASEAN CURRENCY AI</h2>
         
         <div class="row g-4">
             <div class="col-md-12" id="leftCol">
@@ -168,14 +132,14 @@ select.form-select:focus, input.form-control:focus {
 
                 <div id="aiResultPanel" class="d-none">
                     <div class="p-3 text-center bg-white bg-opacity-10 rounded-4">
-                        <span class="badge bg-success mb-2">AI DETECTOR ACTIVE</span>
-                        <h5 id="label-name" class="text-info">Scanning...</h5>
+                        <span id="status-badge" class="badge bg-warning mb-2">SCANNING...</span>
+                        <h5 id="label-name" class="text-info">Mendeteksi...</h5>
                         <h2 id="converted-val" style="color: var(--accent-color); font-weight: 800;">Rp 0</h2>
                         <div class="accuracy-bar-bg"><div id="accuracy-bar-fill"></div></div>
-                        <small id="label-prob">Confidence: 0%</small>
+                        <small id="label-prob">Accuracy: 0%</small>
                         <br>
                         <button onclick="location.reload()" class="btn btn-back-panel">
-                            <i class="fas fa-arrow-left me-1"></i> Kembali
+                            <i class="fas fa-arrow-left me-1"></i> Kembali / Reset
                         </button>
                     </div>
                 </div>
@@ -208,8 +172,8 @@ select.form-select:focus, input.form-control:focus {
                     <img id="image-to-crop" style="max-width: 100%; display: block;">
                 </div>
                 <div class="modal-footer border-secondary">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
-                    <button type="button" id="cropButton" class="btn btn-main">POTONG & ANALISIS</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" id="cropButton" class="btn btn-main">ANALISIS SEKARANG</button>
                 </div>
             </div>
         </div>
@@ -217,171 +181,171 @@ select.form-select:focus, input.form-control:focus {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        const URL_MODEL = "https://teachablemachine.withgoogle.com/models/_5T0OXtkr/";
-        let model, webcam, isRunning = false, cropper;
+<script>
+    const URL_MODEL = "https://teachablemachine.withgoogle.com/models/_5T0OXtkr/";
+    let model, webcam, isRunning = false, cropper;
+    let lastResult = "";
 
-        async function init() {
+    async function init() {
+        try {
             model = await tmImage.load(URL_MODEL + "model.json", URL_MODEL + "metadata.json");
+            console.log("Model Loaded");
+        } catch (e) { console.error("Model Load Error"); }
+    }
+    init();
+
+    async function startMode(mode) {
+        document.getElementById("mainCard").classList.add("wide");
+        document.getElementById("leftCol").classList.replace("col-md-12", "col-md-6");
+        document.getElementById("rightCol").classList.remove("d-none");
+        document.getElementById("manualPanel").classList.add("d-none");
+        document.getElementById("aiResultPanel").classList.remove("d-none");
+        
+        const container = document.getElementById("media-container");
+        container.style.display = "flex";
+        container.innerHTML = ''; 
+
+        if (mode === 'camera') {
+            webcam = new tmImage.Webcam(400, 400, true); 
+            await webcam.setup(); await webcam.play();
+            container.appendChild(webcam.canvas);
+            isRunning = true; window.requestAnimationFrame(loop);
         }
-        init();
+    }
 
-        async function startMode(mode) {
-            document.getElementById("mainCard").classList.add("wide");
-            document.getElementById("leftCol").classList.replace("col-md-12", "col-md-6");
-            document.getElementById("rightCol").classList.remove("d-none");
-            document.getElementById("manualPanel").classList.add("d-none");
-            document.getElementById("aiResultPanel").classList.remove("d-none");
-            
-            const container = document.getElementById("media-container");
-            container.style.display = "flex";
-            container.innerHTML = ''; 
-
-            if (mode === 'camera') {
-                webcam = new tmImage.Webcam(400, 400, true);
-                await webcam.setup(); await webcam.play();
-                container.appendChild(webcam.canvas);
-                isRunning = true; window.requestAnimationFrame(loop);
-            }
+    async function loop() {
+        if (isRunning && webcam) { 
+            webcam.update(); await predict(webcam.canvas); 
+            window.requestAnimationFrame(loop); 
         }
+    }
 
-        async function loop() {
-            if (isRunning && webcam) { 
-                webcam.update(); 
-                await predict(webcam.canvas); 
-                window.requestAnimationFrame(loop); 
-            }
+    function handleFileUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const imgToCrop = document.getElementById("image-to-crop");
+                imgToCrop.src = e.target.result;
+                const cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
+                cropModal.show();
+
+                document.getElementById('cropModal').addEventListener('shown.bs.modal', () => {
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(imgToCrop, { 
+                        aspectRatio: NaN, 
+                        viewMode: 1,
+                        autoCropArea: 0.8
+                    });
+                }, { once: true });
+            };
+            reader.readAsDataURL(input.files[0]);
         }
+    }
 
-        function handleFileUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const imgToCrop = document.getElementById("image-to-crop");
-                    imgToCrop.src = e.target.result;
-                    const cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
-                    cropModal.show();
+    document.getElementById("cropButton").addEventListener("click", async () => {
+        const croppedCanvas = cropper.getCroppedCanvas();
+        const finalCanvas = document.createElement('canvas');
+        const ctx = finalCanvas.getContext('2d');
+        finalCanvas.width = 224;
+        finalCanvas.height = 224;
+        const scale = Math.min(224 / croppedCanvas.width, 224 / croppedCanvas.height);
+        const x = (224 / 2) - (croppedCanvas.width / 2) * scale;
+        const y = (224 / 2) - (croppedCanvas.height / 2) * scale;
+        ctx.fillStyle = "black"; 
+        ctx.fillRect(0, 0, 224, 224);
+        ctx.drawImage(croppedCanvas, x, y, croppedCanvas.width * scale, croppedCanvas.height * scale);
+        
+        bootstrap.Modal.getInstance(document.getElementById('cropModal')).hide();
+        isRunning = false;
+        if(webcam) webcam.stop();
 
-                    document.getElementById('cropModal').addEventListener('shown.bs.modal', () => {
-                        if (cropper) cropper.destroy();
-                        // ASPECT RATIO: NaN (Not a Number) agar BEBAS ditarik kemana saja
-                        cropper = new Cropper(imgToCrop, { 
-                            aspectRatio: NaN, 
-                            viewMode: 1,
-                            autoCropArea: 0.8
-                        });
-                    }, { once: true });
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        document.getElementById("cropButton").addEventListener("click", async () => {
-            // Kita ambil hasil crop dengan resolusi tinggi dulu
-            const croppedCanvas = cropper.getCroppedCanvas();
-            
-            // LOGIKA SMART PADDING: Agar hasil crop bebas tidak gepeng saat masuk ke AI
-            const finalCanvas = document.createElement('canvas');
-            const ctx = finalCanvas.getContext('2d');
-            finalCanvas.width = 224;
-            finalCanvas.height = 224;
-
-            // Hitung skala agar gambar masuk ke 224x224 tanpa merusak rasio
-            const scale = Math.min(224 / croppedCanvas.width, 224 / croppedCanvas.height);
-            const x = (224 / 2) - (croppedCanvas.width / 2) * scale;
-            const y = (224 / 2) - (croppedCanvas.height / 2) * scale;
-
-            ctx.fillStyle = "black"; // Background hitam untuk area kosong
-            ctx.fillRect(0, 0, 224, 224);
-            ctx.drawImage(croppedCanvas, x, y, croppedCanvas.width * scale, croppedCanvas.height * scale);
-            
-            bootstrap.Modal.getInstance(document.getElementById('cropModal')).hide();
-            isRunning = false;
-            if(webcam) webcam.stop();
-
-            await startMode('upload');
-            
-            const container = document.getElementById("media-container");
-            const finalImg = document.createElement("img");
-            finalImg.src = croppedCanvas.toDataURL(); // Tampilkan yang versi asli (bebas) di layar
-            finalImg.style.maxWidth = "100%";
-            container.appendChild(finalImg);
-            
-            // Tapi kirim yang sudah di-resize & dipadding ke AI (finalCanvas)
-            await predict(finalCanvas);
-        });
-
-        async function predict(source) {
-            const prediction = await model.predict(source);
-            let top = prediction.reduce((prev, curr) => (prev.probability > curr.probability) ? prev : curr);
-            
-            const prob = (top.probability * 100).toFixed(0);
-            document.getElementById("accuracy-bar-fill").style.width = prob + "%";
-            document.getElementById("label-prob").innerText = `Confidence: ${prob}%`;
-
-            if (top.probability > 0.60) {
-                let label = top.className.toUpperCase();
-                document.getElementById("label-name").innerText = label;
-
-                let amount = label.match(/\d+/);
-                let code = "";
-                if(label.includes("VND")) code = "VND";
-                else if(label.includes("MMK")) code = "MMK";
-                else if(label.includes("LAK")) code = "LAK";
-                else if(label.includes("USD") || label.includes("TIMOR")) code = "USD";
-                else if(label.includes("THB")) code = "THB";
-                else if(label.includes("SGD")) code = "SGD";
-                else if(label.includes("MYR")) code = "MYR";
-                else if(label.includes("PHP")) code = "PHP";
-
-                if (code && amount) fetchKurs(code, amount[0]);
-            }
-        }
-
-        async function fetchKurs(cur, amt) {
-            try {
-                const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${cur}`);
-                const data = await res.json();
-                const total = amt * data.rates.IDR;
-                document.getElementById("converted-val").innerText = new Intl.NumberFormat('id-ID', { 
-                    style: 'currency', currency: 'IDR', maximumFractionDigits: 0 
-                }).format(total);
-            } catch (e) { }
-        }
-
-        async function manualConvert() {
-            const amt = document.getElementById('amtInput').value;
-            const cur = document.getElementById('curInput').value;
-            try {
-                const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${cur}`);
-                const data = await res.json();
-                document.getElementById('valManual').innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amt * data.rates.IDR);
-                document.getElementById('resManual').classList.remove('d-none');
-            } catch (e) { alert("Gagal!"); }
-        }
-        const moneyRainContainer = document.querySelector('.money-rain-container');
-const currencyEmojis = ['💵', '🪙', '💰', '💸', '💳'];
-
-function createMoney() {
-    const money = document.createElement('div');
-    money.classList.add('money-item');
-    money.innerText = currencyEmojis[Math.floor(Math.random() * currencyEmojis.length)];
-    money.style.left = Math.random() * 100 + 'vw';
-    money.style.animationDuration = (Math.random() * 5 + 5) + 's';
-    money.style.animationDelay = Math.random() * 5 + 's';
-    money.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
-    
-    moneyRainContainer.appendChild(money);
-    
-    money.addEventListener('animationend', () => {
-        money.remove();
-        createMoney();
+        await startMode('upload');
+        const container = document.getElementById("media-container");
+        container.innerHTML = ''; 
+        const previewImg = document.createElement("img");
+        previewImg.src = croppedCanvas.toDataURL(); 
+        container.appendChild(previewImg);
+        
+        await predict(finalCanvas);
     });
-}
 
-for (let i = 0; i < 15; i++) {
-    createMoney();
-}
-    </script>
+    async function predict(source) {
+        const prediction = await model.predict(source);
+        prediction.sort((a, b) => b.probability - a.probability);
+        const top = prediction[0];
+        const prob = (top.probability * 100).toFixed(0);
+
+        document.getElementById("accuracy-bar-fill").style.width = prob + "%";
+        document.getElementById("label-prob").innerText = `Accuracy: ${prob}%`;
+
+        // REVISI: Threshold diturunkan ke 0.50 agar lebih sensitif
+        if (top.probability > 0.50) {
+            let label = top.className.toUpperCase();
+            document.getElementById("label-name").innerText = label;
+            document.getElementById("status-badge").className = "badge bg-success mb-2";
+            document.getElementById("status-badge").innerText = "MATCH FOUND";
+
+            let amountMatch = label.match(/\d+/);
+            let code = extractCurrencyCode(label);
+
+            if (code && amountMatch) {
+                fetchKurs(code, amountMatch[0]);
+            }
+        } else {
+            document.getElementById("status-badge").className = "badge bg-warning mb-2";
+            document.getElementById("status-badge").innerText = "SCANNING...";
+        }
+    }
+
+    function extractCurrencyCode(label) {
+        // Tambahkan BND dan KHR ke dalam daftar database
+        const codes = ["SGD", "THB", "MYR", "VND", "LAK", "MMK", "USD", "PHP", "BND", "KHR"];
+        for (let code of codes) {
+            if (label.includes(code)) return code;
+        }
+        return null;
+    }
+
+    async function fetchKurs(cur, amt) {
+        try {
+            // Kita pakai SGD sebagai pengganti BND jika API tidak support BND 
+            // karena nilai tukar BND dan SGD itu 1:1 (Pegged)
+            let apiCur = (cur === "BND") ? "SGD" : cur;
+            
+            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${apiCur}`);
+            const data = await res.json();
+            const total = amt * data.rates.IDR;
+            
+            document.getElementById("converted-val").innerText = new Intl.NumberFormat('id-ID', { 
+                style: 'currency', currency: 'IDR', maximumFractionDigits: 0 
+            }).format(total);
+        } catch (e) { 
+            console.error("API Error"); 
+        }
+    }
+
+    async function manualConvert() {
+        const amt = document.getElementById('amtInput').value;
+        const cur = document.getElementById('curInput').value;
+        try {
+            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${cur}`);
+            const data = await res.json();
+            document.getElementById('valManual').innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amt * data.rates.IDR);
+            document.getElementById('resManual').classList.remove('d-none');
+        } catch (e) { alert("Error!"); }
+    }
+
+    const moneyRainContainer = document.querySelector('.money-rain-container');
+    function createMoney() {
+        const money = document.createElement('div');
+        money.classList.add('money-item');
+        money.innerText = ['💵', '🪙', '💰', '💸'][Math.floor(Math.random() * 4)];
+        money.style.left = Math.random() * 100 + 'vw';
+        money.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        moneyRainContainer.appendChild(money);
+        money.addEventListener('animationend', () => money.remove());
+    }
+    setInterval(createMoney, 400);
+</script>
 </body>
 </html>
